@@ -1,0 +1,115 @@
+<?php
+// Include your database connection code
+include '../db.php';
+
+session_start(); // Start session for user authentication
+
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// Retrieve and decode JSON data
+// $data = json_decode(file_get_contents("php://input"), true);
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    // Retrieve form data
+    $date = ($_POST['date']);
+    $category = ($_POST['category']);
+    $item = ($_POST['item']);
+    $amount = ($_POST['amount']);
+    $details = ($_POST['details']);
+
+    // Check if user is logged in
+    if (isset($_SESSION['user_id'])) {
+        $userId = $_SESSION['user_id']; // Retrieve user ID from session
+    } else {
+        // Handle the case if user is not logged in
+        die("User is not logged in.");
+    }
+
+    // Example SQL query to insert income data
+    $query = "INSERT INTO income(`user_id`, `date`, `category`, `item`, `amount`, `details`) 
+    VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ssssss", $userId, $date, $category, $item, $amount, $details);
+    
+
+// After successfully adding income, redirect to recent_updates.php
+if ($stmt->execute()) {
+    // Income added successfully, redirect to recent_updates.php
+    $updateType = 'income'; // Set the update type
+    
+    // Redirect to recent_updates.php after sending data
+    echo '<script>
+            // Send the user to recent_updates.php with the data
+            window.location.href = "./recent_updates.php?type=' . $updateType . '&amount=' . $amount . '&item=' . $item . '"; 
+            // Display index.php in the URL
+            window.history.replaceState({}, document.title, "../index.php");
+          </script>';
+    exit(); // Make sure to exit after redirection
+} else {
+    echo "Error: " . $query . "<br>" . $conn->error;
+}
+
+
+
+    // Close the prepared statement
+    $stmt->close();
+
+    // Close database connection
+    mysqli_close($conn);
+}
+
+
+//expense
+<!-- <script>
+        function addExpense(event) {
+            event.preventDefault(); // Prevent form submission
+            // Retrieve form data
+            const formData = new FormData(event.target);
+            const date = formData.get('date');
+            const category = formData.get('category');
+            const item = formData.get('item');
+            const amount = formData.get('amount');
+            const details = formData.get('details');
+
+            // Send AJAX request to add expense
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'add_expense.php');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Handle success
+                    alert('Expense added successfully');
+                    // You can reload the page or perform any other action here
+                } else {
+                    // Handle error
+                    alert('Error adding expense');
+                }
+            };
+            xhr.send(JSON.stringify({ date, category, item, amount, details }));
+        }
+    </script> -->
+
+    //income
+    <!-- <script>
+             function validateForm() {
+            var date = document.getElementById("date").value;
+            var category = document.getElementById("category").value;
+            var item = document.getElementById("item").value;
+            var amount = document.getElementById("amount").value;
+            var details = document.getElementById("details").value;
+
+            if (date == "" || category == "" || item == "" || amount == "" || details == "") {
+                alert("Please fill in all the fields.");
+                return false;
+            }
+            return true;
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const success = urlParams.get('success');
+
+        if (success === 'true') {
+            alert("Income successfully added");
+        }
+    }
+    </script> -->

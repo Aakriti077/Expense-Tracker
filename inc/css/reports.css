@@ -1,0 +1,45 @@
+.title {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+}
+
+.report_container {
+  width: 100%;
+  margin-top: 0.9rem;
+  border-radius: 0.75rem;
+  background-color: white;
+  padding: 1rem 3rem 2rem 3rem;
+  color: rgb(7, 7, 7);
+  box-shadow: 0 1rem 2rem rgba(209, 194, 218, 0.52);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card .card_details {
+  display: flex;
+}
+
+.report_container .card h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.card_details img {
+  width: 20rem;
+  height: 20rem;
+  border-radius: 30px;
+  margin-right: 3rem;
+}
+
+.card_details p {
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+}

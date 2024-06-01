@@ -1,0 +1,35 @@
+<?php
+include '../db.php';
+
+session_start(); // Start session for user authentication
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to the login page if not logged in
+    header("Location: ./login.php");
+    exit;
+}
+
+$user_id = $_SESSION['user_id']; // Get the user ID from the session
+
+// Query to fetch total income for the current user
+$sql_income = "SELECT SUM(amount) AS total_income FROM income WHERE user_id = $user_id";
+$result_income = mysqli_query($conn, $sql_income);
+$total_income = 0;
+if ($row_income = mysqli_fetch_assoc($result_income)) {
+    $total_income = $row_income['total_income'];
+}
+
+// Query to fetch total expenses for the current user
+$sql_expense = "SELECT SUM(amount) AS total_expense FROM expenses WHERE user_id = $user_id";
+$result_expense = mysqli_query($conn, $sql_expense);
+$total_expense = 0;
+if ($row_expense = mysqli_fetch_assoc($result_expense)) {
+    $total_expense = $row_expense['total_expense'];
+}
+
+// Calculate the total amount
+$total_amount = $total_income - $total_expense;
+
+mysqli_close($conn);
+?>
